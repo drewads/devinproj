@@ -24,6 +24,7 @@ class FriendResponse(BaseModel):
     id: str
     username: str
     status: str
+    relation_id: Optional[str] = None
 
 class WeatherData(BaseModel):
     temperature: float

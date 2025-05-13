@@ -18,13 +18,18 @@ async def send_friend_request(request: FriendRequest, user_id: str = Depends(get
         raise HTTPException(status_code=404, detail="User not found")
     
     friend_id = None
-    for uid, user in users_db.items():
-        if user.username.lower() == request.username.lower():
-            friend_id = uid
-            break
+    if hasattr(request, 'username') and request.username:
+        for uid, user in users_db.items():
+            if user.username.lower() == request.username.lower():
+                friend_id = uid
+                break
+    
+    if not friend_id and hasattr(request, 'username') and request.username:
+        if request.username in users_db:
+            friend_id = request.username
     
     if not friend_id:
-        raise HTTPException(status_code=404, detail="Friend not found. Check the username and try again.")
+        raise HTTPException(status_code=404, detail="Friend not found. Check the username or user ID and try again.")
     
     if friend_id == user_id:
         raise HTTPException(status_code=400, detail="You cannot send a friend request to yourself")
@@ -45,7 +50,8 @@ async def send_friend_request(request: FriendRequest, user_id: str = Depends(get
     return FriendResponse(
         id=friend.id,
         username=friend.username,
-        status="pending"
+        status="pending",
+        relation_id=relation_id
     )
 
 @router.post("/accept/{relation_id}", response_model=FriendResponse)
@@ -64,7 +70,8 @@ async def accept_friend_request(relation_id: str, user_id: str = Depends(get_use
     return FriendResponse(
         id=friend.id,
         username=friend.username,
-        status="accepted"
+        status="accepted",
+        relation_id=relation_id
     )
 
 @router.post("/reject/{relation_id}")
@@ -112,7 +119,8 @@ async def get_friend_requests(user_id: str = Depends(get_user_id)):
             requests.append(FriendResponse(
                 id=friend.id,
                 username=friend.username,
-                status="pending"
+                status="pending",
+                relation_id=relation_id
             ))
     
     return requests

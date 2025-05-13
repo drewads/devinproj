@@ -60,7 +60,7 @@ export default function Friends() {
     try {
       await acceptFriendRequest(relationId);
       
-      const updatedRequests = friendRequests.filter(request => request.id !== relationId);
+      const updatedRequests = friendRequests.filter(request => request.relation_id !== relationId);
       setFriendRequests(updatedRequests);
       
       const friendsData = await getFriends();
@@ -77,7 +77,7 @@ export default function Friends() {
     try {
       await rejectFriendRequest(relationId);
       
-      const updatedRequests = friendRequests.filter(request => request.id !== relationId);
+      const updatedRequests = friendRequests.filter(request => request.relation_id !== relationId);
       setFriendRequests(updatedRequests);
       
       setSuccess('Friend request rejected');
@@ -106,15 +106,15 @@ export default function Friends() {
       <Card className="mb-6">
         <CardHeader>
           <CardTitle>Add Friend</CardTitle>
-          <CardDescription>Send a friend request using their username</CardDescription>
+          <CardDescription>Send a friend request using their username or user ID</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSendRequest} className="flex space-x-2">
             <div className="flex-1">
-              <Label htmlFor="friendId" className="sr-only">Friend Username</Label>
+              <Label htmlFor="friendId" className="sr-only">Friend Username or ID</Label>
               <Input
                 id="friendId"
-                placeholder="Enter friend's username"
+                placeholder="Enter friend's username or user ID"
                 value={friendId}
                 onChange={(e) => setFriendId(e.target.value)}
               />
@@ -177,11 +177,11 @@ export default function Friends() {
                     <CardDescription>User ID: {request.id}</CardDescription>
                   </CardHeader>
                   <CardFooter className="flex justify-between">
-                    <Button onClick={() => handleAcceptRequest(request.id)} className="flex-1 mr-2">
+                    <Button onClick={() => handleAcceptRequest(request.relation_id || '')} className="flex-1 mr-2">
                       <UserCheck className="mr-2 h-4 w-4" />
                       Accept
                     </Button>
-                    <Button onClick={() => handleRejectRequest(request.id)} variant="outline" className="flex-1">
+                    <Button onClick={() => handleRejectRequest(request.relation_id || '')} variant="outline" className="flex-1">
                       <UserX className="mr-2 h-4 w-4" />
                       Reject
                     </Button>

@@ -9,6 +9,7 @@ export interface Friend {
   id: string;
   username: string;
   status: string;
+  relation_id?: string;
 }
 
 export interface WeatherData {
