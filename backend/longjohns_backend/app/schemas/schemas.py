@@ -18,7 +18,7 @@ class UserResponse(BaseModel):
     created_at: datetime
 
 class FriendRequest(BaseModel):
-    friend_id: str
+    username: str
 
 class FriendResponse(BaseModel):
     id: str

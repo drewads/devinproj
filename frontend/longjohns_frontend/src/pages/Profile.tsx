@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getUserActivities } from '../services/api';
 import { Activity } from '../types';
 import { useAuth } from '../context/AuthContext';
@@ -36,6 +36,10 @@ export default function Profile() {
           <div>
             <h1 className="text-2xl font-bold">{user?.username}</h1>
             <p className="text-gray-500">{user?.email}</p>
+            <div className="mt-2 p-2 bg-gray-100 rounded-md">
+              <p className="text-sm text-gray-600">Your User ID: <span className="font-mono font-semibold">{user?.id}</span></p>
+              <p className="text-xs text-gray-500 mt-1">Share this ID with friends who want to add you</p>
+            </div>
           </div>
         </div>
       </div>

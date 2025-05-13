@@ -18,6 +18,10 @@ async def register_user(user_data: UserCreate):
         if user.email == user_data.email:
             raise HTTPException(status_code=400, detail="Email already registered")
     
+    for user_id, user in users_db.items():
+        if user.username.lower() == user_data.username.lower():
+            raise HTTPException(status_code=400, detail="Username already taken")
+    
     user_id = str(uuid.uuid4())
     new_user = User(
         id=user_id,

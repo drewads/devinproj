@@ -106,15 +106,15 @@ export default function Friends() {
       <Card className="mb-6">
         <CardHeader>
           <CardTitle>Add Friend</CardTitle>
-          <CardDescription>Send a friend request using their user ID</CardDescription>
+          <CardDescription>Send a friend request using their username</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSendRequest} className="flex space-x-2">
             <div className="flex-1">
-              <Label htmlFor="friendId" className="sr-only">Friend ID</Label>
+              <Label htmlFor="friendId" className="sr-only">Friend Username</Label>
               <Input
                 id="friendId"
-                placeholder="Enter friend's user ID"
+                placeholder="Enter friend's username"
                 value={friendId}
                 onChange={(e) => setFriendId(e.target.value)}
               />

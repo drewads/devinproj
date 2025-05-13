@@ -17,22 +17,31 @@ async def send_friend_request(request: FriendRequest, user_id: str = Depends(get
     if user_id not in users_db:
         raise HTTPException(status_code=404, detail="User not found")
     
-    if request.friend_id not in users_db:
-        raise HTTPException(status_code=404, detail="Friend not found")
+    friend_id = None
+    for uid, user in users_db.items():
+        if user.username.lower() == request.username.lower():
+            friend_id = uid
+            break
+    
+    if not friend_id:
+        raise HTTPException(status_code=404, detail="Friend not found. Check the username and try again.")
+    
+    if friend_id == user_id:
+        raise HTTPException(status_code=400, detail="You cannot send a friend request to yourself")
     
     for relation_id, relation in friends_db.items():
-        if (relation.user_id == user_id and relation.friend_id == request.friend_id) or \
-           (relation.user_id == request.friend_id and relation.friend_id == user_id):
+        if (relation.user_id == user_id and relation.friend_id == friend_id) or \
+           (relation.user_id == friend_id and relation.friend_id == user_id):
             if relation.status == "accepted":
                 raise HTTPException(status_code=400, detail="Already friends")
             elif relation.status == "pending":
                 raise HTTPException(status_code=400, detail="Friend request already pending")
     
     relation_id = str(uuid.uuid4())
-    relation = FriendRelation(user_id=user_id, friend_id=request.friend_id)
+    relation = FriendRelation(user_id=user_id, friend_id=friend_id)
     friends_db[relation_id] = relation
     
-    friend = users_db[request.friend_id]
+    friend = users_db[friend_id]
     return FriendResponse(
         id=friend.id,
         username=friend.username,

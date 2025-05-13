@@ -51,10 +51,10 @@ export const getFriendRequests = async (): Promise<Friend[]> => {
   return apiRequest('/friends/requests');
 };
 
-export const sendFriendRequest = async (friendId: string): Promise<Friend> => {
+export const sendFriendRequest = async (username: string): Promise<Friend> => {
   return apiRequest('/friends/request', {
     method: 'POST',
-    body: JSON.stringify({ friend_id: friendId }),
+    body: JSON.stringify({ username }),
   });
 };
 
